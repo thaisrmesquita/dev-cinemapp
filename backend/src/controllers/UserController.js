@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User';
 
 class UserController {
+  
   async index(req, res) {
     const user = await User.find();
 
