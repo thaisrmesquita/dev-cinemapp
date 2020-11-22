@@ -6,32 +6,36 @@ import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const LoginForm = (props) => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
     
     const navigation = props.navigation;
-    
-    async function handleLogin(e) {
+
+    async function handleRegister(e) {
         e.preventDefault();
-
+        
+        const data = {
+            name,
+            email,
+            password,
+        };
         try {
-            const response = await api.post('sessions', { email,password });
-            await AsyncStorage.setItem('userId', response.data._id);
-            await AsyncStorage.setItem('userName', response.data.name);
-            await AsyncStorage.setItem('userEmail', response.data.email);
-            console.log('ok');
-            navigation.navigate('Home');
-        } catch(err) {
-            console.log('Não ok');
+            const response = await api.post('users', data);
+            console.log('usuário cadastrado!');
+            navigation.navigate('Login');
+        } catch (err) {
+            console.log(`Erro no cadastro! Tente novamente!`);
         }
-    }
-
-    function handleGoRegister () {
-        navigation.navigate('Register');
-    }
+    }    
 
     return (
         <View style={styles.container}>
+            <TextInput
+             style={styles.input}
+             placeholder="Nome"
+             onChangeText={name => setName(name)}
+             defaultValue={name} />
             <TextInput
              style={styles.input}
              placeholder="Email"
@@ -45,19 +49,10 @@ const LoginForm = (props) => {
              defaultValue={password} />
              <TouchableOpacity 
              style={styles.button}
-             onPress={handleLogin}
+             onPress={handleRegister}
              >
-                <Text style={styles.textButton}>Entrar</Text>
+                <Text style={styles.textButton}>Cadastrar</Text>
              </TouchableOpacity>
-             <View style={styles.containerRegister}>
-             <Text style={styles.textInfo}>Não tem conta?</Text>
-             <TouchableOpacity 
-             style={styles.buttonRegister}
-             onPress={handleGoRegister}
-             >
-                 <Text style={styles.textButtonRegister}>Cadastre-se aqui!</Text>
-             </TouchableOpacity>
-             </View>
         </View>
     )
 
