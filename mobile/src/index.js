@@ -9,16 +9,17 @@ import Home from './screens/Home';
 import FavoriteMovie from './screens/FavoriteMovie';
 import SplashScreen from './screens/SplashScreen';
 import Login from './screens/Login';
+import Register from './screens/Register';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const icons = {
   Busca: {
-    name: 'ios-home'
+    name: 'search-outline'
   },
   Favoritos:{
-    name: 'ios-people'
+    name: 'star-outline'
   },
 };
 
@@ -33,10 +34,11 @@ function Tabs(){
       }) }
       tabBarOptions={{
         style:{
-          backgroundColor: '#fff'
+          backgroundColor: '#17C548'
         },
-        activeTintColor: '#2980b9',
-        inactiveTintColor:'black'
+        activeTintColor: 'yellow',
+        activeBackgroundColor:'#1B9E40',
+        inactiveTintColor:'#fff'
       }}
       >
         <Tab.Screen name="Busca" component={Home} />
@@ -54,6 +56,7 @@ export default function App(){
             <Stack.Screen name="Home" component={Tabs} options={{ headerShown: false }} />
             <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         </Stack.Navigator>
         </NavigationContainer>
     </>
