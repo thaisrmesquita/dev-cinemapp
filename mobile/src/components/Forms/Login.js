@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 import api from '../../services/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('');   
+    
+    const navigation = props.navigation;
     
     async function handleLogin(e) {
         e.preventDefault();
 
         try {
             const response = await api.post('sessions', { email,password });
-            console.log('Ok');
+            await AsyncStorage.setItem('userId', response.data._id);
+            await AsyncStorage.setItem('userName', response.data.name);
+            await AsyncStorage.setItem('userEmail', response.data.email);
+            console.log('ok');
+            navigation.navigate('Home');
         } catch(err) {
             console.log('Não ok');
         }

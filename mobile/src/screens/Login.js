@@ -1,9 +1,15 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import FormLogin from '../components/Forms/Login';
 import Logo from '../assets/images/logo.png';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Login = () => {
+const Login = ({navigation}) => {
+    function teste () {
+        console.log('cliquei');
+        navigation.navigate('Home');
+    }
+
     return (
         <View style={styles.container}>
             <Image 
@@ -11,7 +17,8 @@ const Login = () => {
             style={styles.image}
             resizeMode="contain"
             />
-        <FormLogin />
+        <FormLogin navigation={navigation} />
+
         </View>
     )
 
