@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity, Keyboard } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity, Keyboard, ActivityIndicator } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const LoginForm = (props) => {
+const RegisterForm = (props) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');   
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     
     const navigation = props.navigation;
 
@@ -21,13 +22,25 @@ const LoginForm = (props) => {
             password,
         };
         try {
+            setIsLoading(true);
             const response = await api.post('users', data);
-            console.log('usuário cadastrado!');
+            alert('Cadastro realizado com sucesso!');
             navigation.navigate('Login');
+            setIsLoading(false);
         } catch (err) {
-            console.log(`Erro no cadastro! Tente novamente!`);
+           alert('Erro no cadastro! Tente novamente!');
+           setIsLoading(false);
         }
     }    
+
+    if(isLoading){
+        return (
+            <View style={styles.containerIsLoading}>
+                <Text style={{color: '#fff'}}>Carregando dados...</Text>
+                <ActivityIndicator size="small" color="#fff" />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
@@ -58,7 +71,7 @@ const LoginForm = (props) => {
 
 }
 
-export default LoginForm;
+export default RegisterForm;
 
 const styles = StyleSheet.create({
     container: {
@@ -96,5 +109,15 @@ const styles = StyleSheet.create({
     textButtonRegister: {
         color: '#00D43B',
         marginLeft: 5
+    },
+    error: {
+        color:'#fff',
+        marginTop: 20,
+        width:'85%',
+        textAlign:'center'
+    },
+    isLoading: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
