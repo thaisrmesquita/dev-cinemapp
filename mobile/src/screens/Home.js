@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, ActivityIndicator } from 'react-native';
 import { ScrollView, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../assets/images/logo.png';
@@ -22,10 +22,15 @@ const Home = () => {
     }, [title]);
 
   async function getMovies() {
-      const response = await api.get(`http://www.omdbapi.com/?apiKey=${apiKey}&s=${title.trim()}`);
-      const movies = JSON.parse(response.request._response);
-      setMovies(movies.Search);
-      return movies;
+      try{
+        const response = await api.get(`http://www.omdbapi.com/?apiKey=${apiKey}&s=${title.trim()}`);
+        const movies = JSON.parse(response.request._response);
+        setMovies(movies.Search);
+        return movies;
+      } catch (error){
+          console.log(error)
+      }
+      
   }
 
     function handleSearch () {
@@ -34,6 +39,9 @@ const Home = () => {
     }
 
     async function handleFavorite(movie) {
+        console.log("Dentro do favorito: ", movie)
+        console.log(userId._W);
+        console.log(movie);
        setName(movie.Title);
        setYear(movie.Year);
        setType(movie.Type);
@@ -41,31 +49,30 @@ const Home = () => {
        setIsFavorite(true);
 
        const data = {
-        user_id: userId._W,
-        title: name,
-        year,
-        type,
-        poster,
-        isFavorite
+        user: userId._W,
+        title: movie.Title,
+        year:movie.Year,
+        type:movie.Type,
+        poster:movie.Poster,
+        isFavorite: true
     };
-
     console.log(data);
-    /*try {
-        const response = await api.post('movies', data);
-        console.log(response);
+
+    try {
+       const response = await api.post('movies', data);
+       console.log(response);
     } catch (err) {
+        console.log(err);
         alert(`Erro no cadastro! Tente novamente!`);
-    }*/
+    }
 
     }
 
-    return (
-        <View style={styles.container}>
-        <ScrollView>
+    if(!movies){
+        return (
+            <>
             <View style={styles.container}>
-            <View style={styles.containerText}>
-                <Text style={styles.text}>Bem-vindo ao CinemAPP, os melhores filmes na ponta dos seus dedos.</Text>
-            </View>
+            <Text style={styles.text}>Bem-vindo ao CinemAPP, os melhores filmes na ponta dos seus dedos.</Text>
             <View style={styles.containerInput}>
                 <TextInput
                 style={styles.input}
@@ -81,23 +88,55 @@ const Home = () => {
                     />
                 </TouchableOpacity>
             </View>
-            {movies !== undefined && movies.length > 0 &&
-                    movies.map(movie => {
-                        return (
-                        <View style={styles.containerMovie}>
-                            <Text style={styles.textMovie}>{movie.Title}</Text>
-                            <Image source={{uri: `${movie.Poster}`}}
-                            style={{width: '100%', height: 400}} />
-                            <TouchableOpacity style={styles.containerButtonFavorite} onPress={() => handleFavorite(movie)}>
-                            <Text style={styles.textButtonFavorite}>Adicionar como Favorito</Text>
-                            </TouchableOpacity>
-
-                        </View>
-                    )})
-                }
-                 </View>
-        </ScrollView>
         </View>
+            <View style={styles.containerSearch}>
+                <Text style={{color: '#fff'}}>Sem buscas não há resultados :(</Text>
+            </View>
+            </>
+        )
+    }
+
+    console.log(movies);
+    return (
+        <>
+        <View style={styles.container}>
+            <Text style={styles.text}>Bem-vindo ao CinemAPP, os melhores filmes na ponta dos seus dedos.</Text>
+            <View style={styles.containerInput}>
+                <TextInput
+                style={styles.input}
+                placeholder="Título"
+                onChangeText={title => setTitle(title)}
+                defaultValue={title} />
+                <TouchableOpacity onPress={handleSearch} style={styles.containerIcon}>
+                    <Icon
+                    name="search-outline"
+                    size={40}
+                    color="#fff"
+                    style={styles.icon}
+                    />
+                </TouchableOpacity>
+            </View>
+        </View>
+        <ScrollView style={styles.containerScroll}>
+            <View style={styles.teste}>
+                    {movies !== undefined && movies.length > 0 &&
+                            movies.map( (movie, index) => {
+                                return (
+                                <View style={styles.containerMovie} key={index}>
+                                    
+                                    <Text style={styles.textMovie}>{movie.Title}</Text>
+                                    <Image source={{uri: `${movie.Poster}`}}
+                                    style={{width: '100%', height: 400}} />
+                                    <TouchableOpacity style={styles.containerButtonFavorite} onPress={() => handleFavorite(movie)}>
+                                    <Text style={styles.textButtonFavorite}>Adicionar como Favorito</Text>
+                                    </TouchableOpacity>
+
+                                </View>
+                            )})
+                        }
+            </View>
+            </ScrollView>
+        </>
     )
 }
 
@@ -105,9 +144,17 @@ export default Home;
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
         backgroundColor: '#181818',
         alignItems:'center'
+    },
+    containerScroll: {
+        backgroundColor: '#181818',
+    },
+    containerSearch: {
+        backgroundColor: '#181818',
+        flex:1,
+        alignItems:'center',
+        justifyContent: 'center'
     },
     containerText: {
         width:'85%',
@@ -116,7 +163,8 @@ const styles = StyleSheet.create({
     },
     text: {
         color:'#fff',
-        textAlign:'center'
+        textAlign:'center',
+        margin:30
     },
     image: {
         marginTop:0,
@@ -127,7 +175,6 @@ const styles = StyleSheet.create({
     },
     containerInput: {
         width:'85%',
-        flex:1,
         flexDirection:'row',
         justifyContent:'center'
     },
@@ -151,7 +198,7 @@ const styles = StyleSheet.create({
     },
     containerMovie: {
         backgroundColor:'#fff',
-        width:'90%',
+        width:'85%',
         alignItems:'center',
         marginBottom:25,
     },
@@ -172,5 +219,8 @@ const styles = StyleSheet.create({
         color:'#fff',
         padding: 15,
         fontWeight:'bold'
+    },
+    teste: {
+        flex:2, justifyContent:'center', alignItems:'center'
     }
 })
