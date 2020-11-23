@@ -1,34 +1,81 @@
-# dev-cinemapp
+## Descrição do Projeto :star:
+Este é um projeto de aplicativo onde o usuário será capaz de buscar por filmes e series utilizando a API (http://www.omdbapi.com/).
+O usuário será capaz de fazer uma busca e selecionar seus filmes favoritos, podendo listá-los e caso deseje, excluí-los da sua lista pessoal.
 
-### Olá amigx,
+## O que a plataforma é capaz de fazer :checkered_flag:
 
-### Seja bem vindx ao nosso desafio!
+:small_blue_diamond: Permitir a busca por filmes que gostamos
 
-Nosso passatempo favorito nessa quarentena tem sido assistir filmes e seriados, por isso pensamos em desenvolver uma solução que nos ajude na hora de selecionar o que mais gostamos. Caso você aceite o nosso desafio, precisamos que você implemente um sistema (fique a vontade pra escolher entre web ou mobile) onde será possível buscar por filmes e series utilizando a API (http://www.omdbapi.com/). Com todos esses filmes a nossa disposição queremos basicamente separar nossos favoritos, para que possamos encontrá-los facilmente depois. Portanto a sua solução deve:
+:small_blue_diamond: Listar os filmes encontrados
 
-- Permitir a busca por filmes que gostamos
-- Listar os filmes encontrados
-- Permitir que escolhamos nosso filmes favoritos
-- Permitir que removamos um filme de nossos favoritos (às vezes um filme enjoa)
-- Listar nossos filmes favoritos
+:small_blue_diamond: Permitir que escolhamos nosso filmes favoritos
 
-Para auxiliar você nesse processo fizemos um protótipo rápido utilizando o Figma. Se quiser conferir é só seguir o link:
+:small_blue_diamond: Permitir que removamos um filme de nossos favoritos (às vezes um filme enjoa)
 
-[https://www.figma.com/proto/UE8zfSxxf8K0TzpgslbYhz/CinemAPP?node-id=1%3A28&scaling=contain](https://www.figma.com/proto/UE8zfSxxf8K0TzpgslbYhz/CinemAPP?node-id=1%3A28&scaling=contain)
+:small_blue_diamond: Listar nossos filmes favoritos
 
+## Como o projeto funciona
 
-Para facilitar um pouco mais as coisas, já deixamos separada uma chave de acesso para a API (ou você pode criar a sua também):
+Este projeto foi desenvolvido com React Native. Ele também possui uma API feita em NodeJs integrado com MongoDB. 
+O usuário busca as informações do filme na API externa do OMDB, mas a partir do momento que ele seleciona um filme como favorito, esse filme é salvo na API do projeto, mantendo um histórico daquele usuário. 
+
+## Pré-requisitos
+
+[Node](https://nodejs.org/en/download/)
+
+[Yarn](https://yarnpkg.com/)
+
+## Como rodar a aplicação 
+
+No terminal, clone o projeto: 
 
 ```
-Chave de API: 925eba28
-Exemplo requisição: GET http://www.omdbapi.com/?apikey=925eba28&s=batman
+https://github.com/thaisrmesquita/dev-cinemapp
 ```
 
-Você pode desenvolver uma solução web ou mobile (react-native), se escolher a primeira opção é importante que consigamos utilizá-la também em nossos celulares.
+entre na pasta do projeto:
 
-## Entrega da sua solução
+```
+cd dev-cinemapp
+```
 
-Deixe bem claro suas premissas, suposições e como executamos seu código. Para entregar essa solução, de um “fork” neste repositório e nos mande o link do novo repositório quando finalizar a tarefa.
+Instale as dependências de cada projeto:
+```
+yarn
+```
+or 
+
+```
+npm install
+```
 
 
-No mais aguardamos seu retorno. Boa sorte :)
+Entre na pasta mobile pelo terminal e execute a aplicação do mobile (lembrando de fazer as alterações de portas da rede no arquivo api(dentro de services):
+
+```
+yarn start
+```
+```
+react-native run-android
+```
+
+Em outra guia do cmd, acesse a pasta backend e execute o comando:
+```
+yarn dev
+```
+
+Pronto, a aplicação estará disponivel, conecte seu aparelho para visualizar a aplicação.
+## Demonstração do funcionamento do aplicativo
+
+[![Watch the video](https://img.youtube.com/vi/dbtR-sjYGMo/hqdefault.jpg)](https://youtu.be/dbtR-sjYGMo)
+
+## Para Teste
+Você pode criar um usuário para a utilização da plataforma, ou se preferir, pode usar o de teste:
+Advogado:
+
+Login: thais@email.com
+senha: 123456
+
+É isso :))
+
+
