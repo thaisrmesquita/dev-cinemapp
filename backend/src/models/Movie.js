@@ -9,6 +9,7 @@ const MovieSchema = new Schema({
     type: SchemaTypes.ObjectId,
     ref: 'User',
   },
+  isFavorite: Boolean
 });
 
 export default model('Movie', MovieSchema);

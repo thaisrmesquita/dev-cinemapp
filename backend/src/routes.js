@@ -2,6 +2,7 @@ import { Router } from 'express';
 import UserController from './controllers/UserController';
 import SessionController from './controllers/SessionController';
 import MovieController from './controllers/MovieController';
+import DashboardController from './controllers/DashboardController';
 
 const routes = new Router();
 
@@ -13,6 +14,7 @@ routes.get('/movies', MovieController.index);
 routes.get('/movies/:id', MovieController.showId);
 routes.get('/movies/:title', MovieController.show);
 routes.delete('/movies/:movie_id', MovieController.destroy);
+routes.get('/dashboard', DashboardController.show);
 
 
 export default routes;

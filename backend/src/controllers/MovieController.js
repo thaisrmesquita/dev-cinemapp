@@ -30,34 +30,40 @@ class MovieController {
   }
 
   async store(req, res) {
-    const { user_id } = req.headers;
+
     const {
         title,
         year,
         type,
         poster,
+        isFavorite,
+        user
     } = req.body;
 
-    const movie = await Movie.findOne({title});
-    if( !movie ) {
+   /* const movie = await Movie.findOne({title});
+    if( !movie ) {*/
       const movie = await Movie.create({
-        user: user_id,
+        user,
         title,
         year,
         type,
         poster,
+        isFavorite
       });
 
       return res.json(movie);
-    }
-    return res.status(400).json("Vocẽ já adicionou esse filme na sua lista");
+    
+    //return res.status(400).json("Vocẽ já adicionou esse filme na sua lista");
   }
+
   async destroy(req, res) {
     const { movie_id } = req.params;
     const { user_id } = req.headers;
 
     const user = await User.findById(user_id);
+    console.log(user);
     const movie = await Movie.findById(movie_id);
+    console.log(movie);
 
     if (String(user._id) !== String(movie.user)) {
       return res.status(401).json({ error: 'Não autorizado.' });
