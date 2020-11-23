@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity, Keyboard } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity, Keyboard, ActivityIndicator } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 import api from '../../services/api';
@@ -8,26 +8,38 @@ import AsyncStorage from '@react-native-community/async-storage';
 const LoginForm = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
+    const [isLoading, setIsLoading] = useState(false);
     
     const navigation = props.navigation;
     
     async function handleLogin(e) {
         e.preventDefault();
-
+        console.log('aqui');
         try {
+            setIsLoading(true);
             const response = await api.post('sessions', { email,password });
             await AsyncStorage.setItem('userId', response.data._id);
             await AsyncStorage.setItem('userName', response.data.name);
             await AsyncStorage.setItem('userEmail', response.data.email);
-            console.log('ok');
             navigation.navigate('Home');
+            setIsLoading(false);
         } catch(err) {
-            console.log('Não ok');
+            alert('E-mail ou senha incorretos. Por favor, tente novamente!')
+            setIsLoading(false);
         }
     }
 
     function handleGoRegister () {
         navigation.navigate('Register');
+    }
+
+    if(isLoading){
+        return (
+            <View style={styles.containerIsLoading}>
+                <Text style={{color: '#fff'}}>Carregando dados...</Text>
+                <ActivityIndicator size="small" color="#fff" />
+            </View>
+        )
     }
 
     return (
@@ -36,7 +48,8 @@ const LoginForm = (props) => {
              style={styles.input}
              placeholder="Email"
              onChangeText={email => setEmail(email)}
-             defaultValue={email} />
+             defaultValue={email}
+              />
              <TextInput
              secureTextEntry={true}
              style={styles.input}
@@ -101,5 +114,13 @@ const styles = StyleSheet.create({
     textButtonRegister: {
         color: '#00D43B',
         marginLeft: 5
+    },
+    error: {
+        color:'#fff',
+        marginTop: 20
+    },
+    isLoading: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
